@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
 import { useRouter } from 'next/navigation';
+import Image from 'next/image'; // <-- DIUBAH (2)
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -10,7 +11,7 @@ import {
     FieldDescription,
     FieldGroup,
     FieldLabel,
-    FieldSeparator,
+    // FieldSeparator, // <-- DIUBAH (3): Dihapus karena tidak terpakai
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -73,7 +74,7 @@ export function LoginForm({
 
             // ⬇️ langsung pindah ke dashboard, token tetap tersimpan & header axios sudah di-set
             router.push('/dashboard');
-        } catch (err: any) {
+        } catch (err: unknown) { // <-- DIUBAH (1): 'any' menjadi 'unknown'
             if (axios.isAxiosError(err) && err.response) {
                 const code = err.response.status;
                 const payload = err.response.data as {
@@ -106,7 +107,7 @@ export function LoginForm({
                     );
                 }
             } else {
-                console.error('Network/Unknown error:', err?.message || err);
+                console.error('Network/Unknown error:', err);
                 toast.error('Tidak dapat terhubung ke server. Coba lagi.');
             }
         } finally {
@@ -123,9 +124,12 @@ export function LoginForm({
                             href="#"
                             className="flex flex-col items-center gap-2 font-medium"
                         >
-                            <img
+                            {/* DIUBAH (4): Menggunakan next/image */}
+                            <Image
                                 src="/assets/yarwee-logo.png"
                                 alt="Logo Yarwee"
+                                width={150} // <-- Sesuaikan dengan lebar gambar Anda
+                                height={50} // <-- Sesuaikan dengan tinggi gambar Anda
                             />
                         </a>
                         <h1 className="text-xl font-bold">

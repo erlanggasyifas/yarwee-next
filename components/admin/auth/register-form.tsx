@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image"; // <-- DIUBAH (2)
 import axios from "axios";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
+  // FieldSeparator, // <-- DIUBAH (3): Dihapus karena tidak terpakai
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -61,8 +62,8 @@ export function RegisterForm({
       toast.success(res?.data?.message ?? "Registrasi berhasil");
 
       // ⬇️ langsung pindah ke /login
-      router.push("/login"); // Inertia navigation (SPA, toast tetap muncul)
-    } catch (err: any) {
+      router.push("/login");
+    } catch (err: unknown) { // <-- DIUBAH (1): 'any' menjadi 'unknown'
       if (axios.isAxiosError(err) && err.response) {
         const code = err.response.status;
         const payload = err.response.data as {
@@ -76,15 +77,21 @@ export function RegisterForm({
         if (code === 422) {
           const items = payload?.errors ?? [];
           toast.error(payload?.message ?? "Validasi gagal", {
-            description: items.length
-              ? items.map((e) => `${e.key}: ${e.error_message}`).join("\n")
-              : undefined,
+            description: items.length ? ( // <-- DIUBAH (5): Format list
+              <ul className="list-disc space-y-1 pl-5">
+                {items.map((e) => (
+                  <li key={e.key}>
+                    <strong>{e.key}</strong>: {e.error_message}
+                  </li>
+                ))}
+              </ul>
+            ) : undefined,
           });
         } else {
           toast.error(payload?.message ?? "Terjadi kesalahan tak terduga.");
         }
       } else {
-        console.error("Network/Unknown error:", err?.message || err);
+        console.error("Network/Unknown error:", err);
         toast.error("Tidak dapat terhubung ke server. Coba lagi.");
       }
     } finally {
@@ -101,7 +108,13 @@ export function RegisterForm({
               href="#"
               className="flex flex-col items-center gap-2 font-medium"
             >
-              <img src="/assets/yarwee-logo.png" alt="Logo Yarwee" />
+              {/* DIUBAH (4): Menggunakan next/image */}
+              <Image
+                src="/assets/yarwee-logo.png"
+                alt="Logo Yarwee"
+                width={150} // <-- Sesuaikan dengan lebar gambar Anda
+                height={50} // <-- Sesuaikan dengan tinggi gambar Anda
+              />
             </a>
             <h1 className="text-xl font-bold">
               Selamat datang di Yarwee Admin
