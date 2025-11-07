@@ -128,7 +128,7 @@ export function LoginForm({
                             <Image
                                 src="/assets/yarwee-logo.png"
                                 alt="Logo Yarwee"
-                                width={150} // <-- Sesuaikan dengan lebar gambar Anda
+                                width={70} // <-- Sesuaikan dengan lebar gambar Anda
                                 height={50} // <-- Sesuaikan dengan tinggi gambar Anda
                             />
                         </a>
