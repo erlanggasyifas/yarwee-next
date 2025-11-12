@@ -14,7 +14,7 @@ import {
 import axios from "axios";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
-
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -164,11 +164,12 @@ export const columns: ColumnDef<UserRow>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => console.log("See detail", user.id)}
-            >
-              See detail
+
+            {/* INI YANG BERUBAH */}
+            <DropdownMenuItem asChild>
+              <Link href={`/member/${user.id}`}>See detail</Link>
             </DropdownMenuItem>
+
             <DropdownMenuItem onClick={() => console.log("Edit", user.id)}>
               Edit
             </DropdownMenuItem>
