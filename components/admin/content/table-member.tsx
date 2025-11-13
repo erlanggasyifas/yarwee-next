@@ -15,10 +15,7 @@ import axios from "axios";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
 import Link from "next/link";
-<<<<<<< HEAD
 
-=======
->>>>>>> b22d3a98d99ab0d034a4ba5999248be0285eef26
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -212,18 +209,8 @@ export const columns: ColumnDef<UserRow>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-<<<<<<< HEAD
             <DropdownMenuItem asChild>
               <Link href={`/member/${user.id}`}>See detail</Link>
-=======
-            {/* INI YANG BERUBAH */}
-            <DropdownMenuItem asChild>
-              <Link href={`/member/${user.id}`}>See detail</Link>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem onClick={() => console.log("Edit", user.id)}>
-              Edit
->>>>>>> b22d3a98d99ab0d034a4ba5999248be0285eef26
             </DropdownMenuItem>
 
             <DropdownMenuItem>Edit</DropdownMenuItem>
