@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -38,22 +39,24 @@ import {
 
 const API_USERS = "http://210.79.190.9:7456/api/admin/users";
 
-/** ===== Types sesuai payload API ===== */
+/** ===== Types sesuai API terbaru ===== */
 export type UserRow = {
-  id: number;
+  id: string;
+  fullName: string;
+  username: string;
   email: string;
-  name: string;
-  phone_number: string;
+  phoneNumber: string;
   gender: string;
-  date_of_birth: string;
-  is_premium: boolean;
-  profile_picture?: string;
-  role?: string;
-  activity_user?: unknown; // bisa object/array/null
+  dateOfBirth: string;
+  isPremium: boolean;
+  profilePicture?: string;
+  role: "Admin" | "User";
+  activity_user?: unknown;
 };
 
-/** ===== Kolom: Name, Email, Status, Activity + Actions (titik tiga) ===== */
+/** ===== Kolom tabel ===== */
 export const columns: ColumnDef<UserRow>[] = [
+  // Checkbox select
   {
     id: "select",
     header: ({ table }) => (
@@ -76,56 +79,96 @@ export const columns: ColumnDef<UserRow>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+
+  // FULL NAME
   {
-    accessorKey: "name",
+    accessorKey: "fullName",
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        onClick={() =>
+          column.toggleSorting(column.getIsSorted() === "asc")
+        }
       >
-        Name
-        <ArrowUpDown />
+        Name <ArrowUpDown />
       </Button>
     ),
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("name")}</div>
+      <div className="font-medium">{row.getValue("fullName")}</div>
     ),
   },
+
+  // EMAIL
   {
     accessorKey: "email",
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        onClick={() =>
+          column.toggleSorting(column.getIsSorted() === "asc")
+        }
       >
-        Email
-        <ArrowUpDown />
+        Email <ArrowUpDown />
       </Button>
     ),
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
+
+  // ROLE → Admin/User
   {
-    id: "status",
-    accessorFn: (row) => row.role ?? (row.is_premium ? "Premium" : "Free"),
+    accessorKey: "role",
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        onClick={() =>
+          column.toggleSorting(column.getIsSorted() === "asc")
+        }
       >
-        Status
-        <ArrowUpDown />
+        Role <ArrowUpDown />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const role = row.getValue("role") as string;
+      return (
+        <span className="px-2 py-1 rounded bg-slate-800/40 text-xs capitalize">
+          {role}
+        </span>
+      );
+    },
+  },
+
+  // STATUS → Premium / Free
+  {
+    id: "status",
+    accessorFn: (row) => (row.isPremium ? "Premium" : "Free"),
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() =>
+          column.toggleSorting(column.getIsSorted() === "asc")
+        }
+      >
+        Status <ArrowUpDown />
       </Button>
     ),
     cell: ({ getValue }) => {
-      const v = String(getValue() ?? "-");
-      const isPremium = v.toLowerCase() === "premium";
+      const v = String(getValue());
+      const isPremium = v === "Premium";
       return (
-        <span className={isPremium ? "text-emerald-600" : "text-slate-600"}>
+        <span
+          className={`px-2 py-1 text-xs font-medium rounded ${
+            isPremium
+              ? "bg-yellow-500/20 text-yellow-400"
+              : "bg-slate-700/30 text-slate-400"
+          }`}
+        >
           {v}
         </span>
       );
     },
   },
+
+  // ACTIVITY Count
   {
     id: "activity",
     accessorFn: (row) => {
@@ -138,17 +181,19 @@ export const columns: ColumnDef<UserRow>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        onClick={() =>
+          column.toggleSorting(column.getIsSorted() === "asc")
+        }
       >
-        Activity
-        <ArrowUpDown />
+        Activity <ArrowUpDown />
       </Button>
     ),
-    cell: ({ getValue }) => {
-      const n = Number(getValue() ?? 0);
-      return <div className="tabular-nums">{n}</div>;
-    },
+    cell: ({ getValue }) => (
+      <div className="tabular-nums">{Number(getValue() ?? 0)}</div>
+    ),
   },
+
+  // DROPDOWN ACTIONS
   {
     id: "actions",
     enableHiding: false,
@@ -158,25 +203,20 @@ export const columns: ColumnDef<UserRow>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => console.log("See detail", user.id)}
-            >
-              See detail
+
+            <DropdownMenuItem asChild>
+              <Link href={`/member/${user.id}`}>See detail</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.log("Edit", user.id)}>
-              Edit
-            </DropdownMenuItem>
+
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-rose-600 focus:text-rose-600"
-              onClick={() => console.log("Delete", user.id)}
-            >
+            <DropdownMenuItem className="text-rose-600">
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -186,23 +226,19 @@ export const columns: ColumnDef<UserRow>[] = [
   },
 ];
 
-/** ===== Props untuk reuse di 2 halaman ===== */
+/** ===== Reusable Tabel Komponen ===== */
 type UserTableProps = {
-  /** 'full' = filter + pagination, 'compact' = hanya tabel 5 terakhir */
   variant?: "full" | "compact";
-  /** jumlah item untuk compact (default 5) */
   limit?: number;
-  /** param tambahan utk server (mis. sortBy/order kalau backend mendukung) */
   params?: Record<string, any>;
 };
 
-/** ===== Komponen tabel (bisa full/compact) ===== */
+/** ===== Component ===== */
 export function DataTableDemo({
   variant = "full",
   limit = 5,
   params,
 }: UserTableProps) {
-  // pastikan Authorization header terpasang dari localStorage
   React.useEffect(() => {
     const token =
       typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
@@ -225,6 +261,7 @@ export function DataTableDemo({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  /** === Fetch Users === */
   const fetchUsers = React.useCallback(
     async (targetPage: number) => {
       try {
@@ -234,7 +271,6 @@ export function DataTableDemo({
           ...(params || {}),
         };
 
-        // untuk compact, coba minta perPage kecil (kalau backend mendukung)
         if (variant === "compact" && limit) query.perPage = limit;
 
         const res = await axios.get(API_USERS, {
@@ -243,14 +279,27 @@ export function DataTableDemo({
         });
 
         const payload = res.data?.data;
-        let users = (payload?.users ?? []) as UserRow[];
+        let users = payload?.users ?? [];
+
+        // Normalisasi sesuai Type
+        users = users.map((u: any) => ({
+          id: u.id,
+          fullName: u.fullName,
+          username: u.username,
+          email: u.email,
+          phoneNumber: u.phoneNumber,
+          gender: u.gender,
+          dateOfBirth: u.dateOfBirth,
+          isPremium: u.isPremium,
+          profilePicture: u.profilePicture,
+          role: u.role,
+          activity_user: u.activity_user,
+        })) as UserRow[];
 
         if (variant === "compact") {
-          // Jika backend tidak mengurutkan, fallback sort lokal (created_at tidak ada: pakai id desc)
-          users = [...users].sort((a, b) => (b as any).id - (a as any).id);
+          users = [...users].sort((a, b) => (b.id > a.id ? 1 : -1));
           if (limit) users = users.slice(0, limit);
           setRows(users);
-          // tidak pakai pagination UI
         } else {
           setRows(users);
           setTotal(payload?.pagination?.total ?? users.length);
@@ -260,10 +309,6 @@ export function DataTableDemo({
       } catch (err) {
         console.error("Failed to fetch users:", err);
         setRows([]);
-        if (variant === "full") {
-          setTotal(0);
-          setLastPage(1);
-        }
       } finally {
         setLoading(false);
       }
@@ -275,14 +320,15 @@ export function DataTableDemo({
     fetchUsers(1);
   }, [fetchUsers]);
 
+  /** React Table Config */
   const table = useReactTable({
     data: rows,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(), // sorting client-side (halaman aktif)
-    getFilteredRowModel: getFilteredRowModel(), // filter email client-side (hanya full yang tampilkan input)
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -298,7 +344,7 @@ export function DataTableDemo({
 
   return (
     <div className="w-full">
-      {/* Toolbar: hanya untuk FULL */}
+      {/* Toolbar untuk FULL */}
       {variant === "full" && (
         <div className="mb-4 flex items-center">
           <Input
@@ -309,30 +355,30 @@ export function DataTableDemo({
             }
             className="max-w-sm"
           />
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
                 Columns <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end">
               {table
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
+                .map((column) => (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -342,9 +388,9 @@ export function DataTableDemo({
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
+            {table.getHeaderGroups().map((hg) => (
+              <TableRow key={hg.id}>
+                {hg.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
@@ -357,13 +403,11 @@ export function DataTableDemo({
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   Loading...
                 </TableCell>
               </TableRow>
@@ -375,20 +419,14 @@ export function DataTableDemo({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -397,16 +435,16 @@ export function DataTableDemo({
         </Table>
       </div>
 
-      {/* Footer/pagination: hanya untuk FULL */}
+      {/* Pagination (FULL) */}
       {variant === "full" && (
         <div className="flex items-center justify-end space-x-2 py-4">
           <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.{" "}
+            {table.getFilteredSelectedRowModel().rows.length} selected.{" "}
             <span className="ml-2">
               Page {page} of {lastPage} • Total {total}
             </span>
           </div>
+
           <div className="space-x-2">
             <Button
               variant="outline"

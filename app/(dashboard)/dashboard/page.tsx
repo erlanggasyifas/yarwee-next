@@ -1,6 +1,6 @@
 import {
   NewestMember,
-  StatusCards,
+  NewestActivity,
   SummaryCards,
 } from "@/components/admin/content/dashboard-content";
 
@@ -13,7 +13,7 @@ export default function DashboardPage() {
         <SummaryCards />
       </div>
       <div>
-        <StatusCards />
+        <NewestActivity />
       </div>
       <div>
         <NewestMember />

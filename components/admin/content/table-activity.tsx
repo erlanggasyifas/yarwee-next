@@ -178,7 +178,7 @@ type StatusTableProps = {
 };
 
 /** ===== Komponen tabel (bisa full/compact) ===== */
-export function DataTableStatus({
+export function DataTableActivity({
   variant = "full",
   limit = 5,
   params,

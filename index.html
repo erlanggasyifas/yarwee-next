@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+      <div
+        class="container h-20 flex items-center justify-between mx-auto px-4"
+      >
+        <img src="/public/assets/yarwee-logo.png" alt="Phone Mockup" />
+
+        <div class="flex space-x-6">
+          <a href="#" class="px-4">Home</a>
+          <a href="#" class="px-4">Features</a>
+          <a href="#" class="px-4">Contact</a>
+        </div>
+
+        <button
+          class="bg-orange-500 text-white px-6 py-3 rounded-md hover:bg-orange-600 transition"
+        >
+          Unduh Sekarang
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center overflow-hidden">
+      <!-- Text Container -->
+      <div
+        class="container mx-auto px-4 flex flex-col md:flex-row items-center relative z-10"
+      >
+        <!-- Text Content -->
+        <div
+          class="w-full flex flex-col gap-6 md:w-2/3 text-center md:text-left"
+        >
+          <div>
+            <p
+              class="rounded-full py-2 px-4 bg-orange-200 w-fit text-orange-400"
+            >
+              Selamat Datang di Yarwee
+            </p>
+          </div>
+          <div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+              Bagi Biaya Tanpa Drama, Mulai Sekarang
+            </h1>
+            <p class="text-lg text-gray-400">
+              Transparansi real-time, laporan ringkas, dan pengalaman bebas
+              ribet
+            </p>
+          </div>
+          <div class="space-x-4">
+            <button
+              class="bg-orange-500 text-white px-6 py-3 rounded-md hover:bg-orange-600 transition"
+            >
+              Unduh Sekarang
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Background Mockup -->
+      <div
+        class="absolute inset-y-0 right-0 w-full md:w-[55%] pointer-events-none"
+      >
+        <img
+          src="/public/assets/phone-mockup.png"
+          alt="Phone Mockup"
+          class="w-full h-full object-contain object-right"
+        />
+      </div>
+    </section>
+
+    <!-- Statistik Section -->
+    <section>
+      <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-4">
+          <div>
+            <div>
+              <p
+                class="rounded-full py-2 px-4 mb-4 bg-orange-200 w-fit text-orange-400"
+              >
+                Tentang Kami
+              </p>
+            </div>
+            <div>
+              <p class="text-2xl">Apa yang kami lakukan</p>
+            </div>
+          </div>
+          <div class="col-span-3">
+            <h1 class="text-4xl md:text-5xl font-semibold mb-4 pl-16">
+              Kami membantu orang membagi tagihan dengan alat modern.
+              Bergabunglah dengan ribuan pengguna yang mempercayai kami untuk
+              patungan adil dan rapi.
+            </h1>
+          </div>
+        </div>
+        <div class="flex justify-between text-center mt-12">
+          <div class="flex flex-col gap-3">
+            <h1 class="text-6xl">158+</h1>
+            <p class="text-gray-400">Total Rekan</p>
+          </div>
+          <div class="flex flex-col gap-3">
+            <h1 class="text-6xl">850K</h1>
+            <p class="text-gray-400">Total Pengguna</p>
+          </div>
+          <div class="flex flex-col gap-3">
+            <h1 class="text-6xl">4.9/5.0</h1>
+            <p class="text-gray-400">Ulasan Pengguna</p>
+          </div>
+          <div class="flex flex-col gap-3">
+            <h1 class="text-6xl">10K</h1>
+            <p class="text-gray-400">Rate Penggunaan</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fitur Section -->
+    <section
+      class="container mx-auto relative w-full py-24 bg-white overflow-hidden"
+    >
+      <div class="text-center">
+        <h2
+          class="text-3xl md:text-4xl mb-2 font-semibold text-gray-900"
+        >
+          Fitur yang Menempatkan Kenyamanan Anda
+        </h2>
+        <p class="text-gray-500 mb-10 max-w-lg mx-auto text-sm">
+          Dari pembiayaan hingga kolaborasi secara langsung, aplikasi kami
+          dibuat untuk mengatur patungan anda dengan kepercayaan, kejelasan, dan
+          kemudahan.
+        </p>
+      </div>
+      <div
+        class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
+      >
+        <!-- Left Image -->
+        <div class="flex items-center justify-center relative">
+          <div
+            id="feature-image"
+            class="relative w-full transition-all duration-500"
+          >
+            <img
+              src="/public/assets/fitur1.png"
+              alt="Feature"
+              class="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+
+        <!-- Right Text List -->
+        <div class="flex flex-col gap-6 relative">
+          <!-- Fitur list -->
+          <div
+            class="relative border-l-2 border-gray-200 dark:border-gray-800 pl-6"
+          >
+            <!-- Orange slider -->
+            <div
+              id="slider"
+              class="absolute left-[-2px] w-[2px] bg-orange-500 transition-all duration-500"
+              style="top: 0; height: 70px"
+            ></div>
+
+            <!-- Item list -->
+            <div
+              class="feature-item mb-6 cursor-pointer"
+              data-img="/public/assets/fitur1.png"
+            >
+              <h3 class="text-lg font-semibold text-orange-500">
+                Pelacakan Patungan Cerdas
+              </h3>
+              <p class="text-sm text-gray-500">
+                Otomatis mencatat dan mengelompokkan semua biaya bersama,
+                sehingga setiap orang tahu ke mana uang mereka pergi—tanpa input
+                rumit.
+              </p>
+            </div>
+
+            <div
+              class="feature-item mb-6 cursor-pointer"
+              data-img="/public/assets/fitur2.png"
+            >
+              <h3
+                class="text-lg font-semibold text-gray-800 hover:text-orange-500"
+              >
+                Status Patungan Real-time
+              </h3>
+              <p class="text-sm text-gray-500">
+                Pantau siapa yang sudah bayar dan siapa yang belum, lengkap
+                dengan pengingat instan agar tagihan cepat beres.
+              </p>
+            </div>
+
+            <div
+              class="feature-item mb-6 cursor-pointer"
+              data-img="/public/assets/fitur3.png"
+            >
+              <h3
+                class="text-lg font-semibold text-gray-800 hover:text-orange-500"
+              >
+                Pengingat Otomatis & Ringkasan
+              </h3>
+              <p class="text-sm text-gray-500">
+                Dapatkan notifikasi saat ada tagihan yang belum lunas dan lihat
+                ringkasan patungan dalam tampilan yang rapi, sehingga semua
+                tetap transparan dan terkendali.
+              </p>
+            </div>
+
+            <div
+              class="feature-item mb-6 cursor-pointer"
+              data-img="/public/assets/fitur4.png"
+            >
+              <h3
+                class="text-lg font-semibold text-gray-800 hover:text-orange-500"
+              >
+                Keamanan Level Bank
+              </h3>
+              <p class="text-sm text-gray-500">
+                Data dienkripsi ujung ke ujung dan dilindungi standar keamanan
+                tingkat tinggi—privasi dan keamanan Anda selalu diutamakan.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JS interaksi hover -->
+    <script>
+      const items = document.querySelectorAll(".feature-item");
+      const slider = document.getElementById("slider");
+      const image = document
+        .getElementById("feature-image")
+        .querySelector("img");
+
+      items.forEach((item, index) => {
+        item.addEventListener("mouseenter", () => {
+          // Geser slider
+          slider.style.top = `${index * 95}px`;
+
+          // Update gambar
+          const newImg = item.getAttribute("data-img");
+          image.src = newImg;
+
+          // Ubah warna teks aktif
+          items.forEach((i) =>
+            i.querySelector("h3").classList.remove("text-orange-500")
+          );
+          item.querySelector("h3").classList.add("text-orange-500");
+        });
+      });
+    </script>
+  </body>
+</html>
