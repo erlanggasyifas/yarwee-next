@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "http://210.79.190.9:7456/:path*",
+      "destination": "https://YOUR-VERCEL-DOMAIN.vercel.app/api/proxy/:path*"
+    }
+  ]
+}
