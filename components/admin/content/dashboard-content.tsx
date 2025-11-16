@@ -12,72 +12,138 @@ import {
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
 import { DataTableActivity } from "./table-activity";
 
+// Helper: format angka ke Rupiah
+const formatRupiah = (value: number) =>
+  new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(value);
+
 export function SummaryCards() {
   return (
     <div className="grid grid-cols-1 gap-6 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:grid-cols-2 xl:grid-cols-4 dark:*:data-[slot=card]:bg-card">
       <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Anggota Baru</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            192
-          </CardTitle>
+        <CardHeader className="flex justify-between pb-2">
+          <div className="space-y-2">
+            <CardDescription>Anggota Baru</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              192
+            </CardTitle>
+          </div>
+          <Badge variant="outline">262 Member <IconTrendingUp /></Badge>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Naik bulan ini <IconTrendingUp className="size-4" />
-          </div>
+
+        {/* FOOTER → KONTEN */}
+        <CardContent className="pt-0 text-sm">
           <div className="text-muted-foreground">
-            Pengunjung selama 6 bulan terakhir
+            Data Dalam 1 Bulan Terakhir
           </div>
-        </CardFooter>
+        </CardContent>
       </Card>
 
       <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Anggota Aktif</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1.234
-          </CardTitle>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Turun 20% pada periode ini <IconTrendingDown className="size-4" />
+        <CardHeader className="flex justify-between pb-2">
+          <div className="space-y-2">
+            <CardDescription>Anggota Free</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              542
+            </CardTitle>
           </div>
-          <div className="text-muted-foreground">Akuisisi perlu perhatian</div>
-        </CardFooter>
+          <Badge variant="outline">125 Member <IconTrendingDown /></Badge>
+        </CardHeader>
+
+        <CardContent className="pt-0 text-sm">
+          <div className="text-muted-foreground">
+            Data Dalam Keseluruhan Sistem
+          </div>
+        </CardContent>
       </Card>
 
       <Card className="@container/card">
+        <CardHeader className="flex justify-between pb-2">
+          <div className="space-y-2">
+            <CardDescription>Anggota Premium</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              2.294
+            </CardTitle>
+          </div>
+          <Badge variant="outline">1.002 Member <IconTrendingDown /></Badge>
+        </CardHeader>
+
+        <CardContent className="pt-0 text-sm">
+          <div className="text-muted-foreground">
+            Data Dalam Keseluruhan Sistem
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="@container/card ">
+        <CardHeader className="flex justify-between pb-2">
+          <div className="space-y-2">
+            <CardDescription>Anggota Berhenti Berlangganan</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              6.158
+            </CardTitle>
+          </div>
+          <Badge variant="outline">11 Member <IconTrendingUp /></Badge>
+        </CardHeader>
+
+        <CardContent className="pt-0 text-sm">
+          <div className="text-muted-foreground">
+            Data Dalam Keseluruhan Sistem
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+/** ========== Informasi Rupiah (simple, 3–4 metric) ========== */
+export function RevenueSummaryCards() {
+  // TODO: ganti angka dummy ini dengan data dari API
+  const totalRevenue = 125000000; // total pendapatan keseluruhan
+  const avgMonthlyRevenue = 10500000; // rata-rata per bulan
+  const currentMonthRevenue = 8500000; // pendapatan bulan ini
+
+  return (
+    <div className="grid grid-cols-1 gap-6 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:grid-cols-2 xl:grid-cols-3 dark:*:data-[slot=card]:bg-card">
+      {/* Total Pendapatan Keseluruhan */}
+      <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Anggota Premium</CardDescription>
+          <CardDescription>Total Pendapatan</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45.678
+            {formatRupiah(totalRevenue)}
           </CardTitle>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Retensi pengguna kuat <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Keterlibatan melampaui target
-          </div>
+        <CardFooter className="text-xs text-muted-foreground">
+          Akumulasi sejak sistem berjalan
         </CardFooter>
       </Card>
 
+      {/* Rata-rata Pendapatan per Bulan */}
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Anggota Berhenti Berlangganan</CardDescription>
+          <CardDescription>Rata-rata per Bulan</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            5.678
+            {formatRupiah(avgMonthlyRevenue)}
           </CardTitle>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Kinerja meningkat stabil <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Sesuai proyeksi pertumbuhan
-          </div>
+        <CardFooter className="text-xs text-muted-foreground">
+          Dari keseluruhan periode tercatat
+        </CardFooter>
+      </Card>
+
+      {/* Pendapatan Bulan Ini */}
+      <Card className="@container/card">
+        <CardHeader>
+          <CardDescription>Pendapatan Bulan Ini</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {formatRupiah(currentMonthRevenue)}
+          </CardTitle>
+        </CardHeader>
+        <CardFooter className="text-xs text-muted-foreground">
+          Update khusus bulan berjalan
         </CardFooter>
       </Card>
     </div>
@@ -119,10 +185,7 @@ export function NewestMember() {
           </CardDescription>
         </CardHeader>
         <CardContent className="px-2 sm:px-6">
-          <DataTableDemo
-            variant="compact"
-            limit={5} /* params={{ sortBy:'id', order:'desc' }} */
-          />
+          <DataTableDemo variant="compact" filterRole="User" limit={5} />
         </CardContent>
       </Card>
     </div>

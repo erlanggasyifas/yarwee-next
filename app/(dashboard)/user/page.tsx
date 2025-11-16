@@ -16,16 +16,16 @@ export default function MemberPage() { // Ganti nama agar lebih jelas
       {/* === Card 1: Context/Intro === */}
       <Card className="@container/card">
         <CardHeader>
-          <CardTitle>Member</CardTitle>
+          <CardTitle>User</CardTitle>
           <CardDescription>
-            Halaman ini menampilkan seluruh data member...
+            Halaman ini menampilkan seluruh data akun user...
           </CardDescription>
         </CardHeader>
       </Card>
 
       {/* === Card 2: Tabel Member === */}
       <Card className="@container/card p-4 pt-8">
-          <DataTableDemo variant="full" />
+          <DataTableDemo variant="full" filterRole="User" />
       </Card>
     </div>
   )

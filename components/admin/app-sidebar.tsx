@@ -12,18 +12,23 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link"; // ⬅️ BERUBAH
-import { Activity, ClipboardList, User2 } from "lucide-react";
+import { ShieldUser, ClipboardList, User2 } from "lucide-react";
 
 const items = [
   {
-    title: "Member",
-    url: "/member",
+    title: "User",
+    url: "/user",
     icon: User2,
   },
   {
     title: "Activity",
     url: "/activity",
     icon: ClipboardList,
+  },
+  {
+    title: "Admin",
+    url: "/admin",
+    icon: ShieldUser,
   },
 ];
 const user = {

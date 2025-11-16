@@ -36,10 +36,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { toast } from "sonner";
 
 const API_USERS = "http://210.79.190.9:7456/api/admin/users";
 
-/** ===== Types sesuai API terbaru ===== */
+/* ============================================================
+   USER TYPE (UPDATED)
+   ============================================================ */
 export type UserRow = {
   id: string;
   fullName: string;
@@ -52,11 +55,17 @@ export type UserRow = {
   profilePicture?: string;
   role: "Admin" | "User";
   activity_user?: unknown;
+
+  /* WAJIB ADA */
+  createdAt: string;
 };
 
-/** ===== Kolom tabel ===== */
-export const columns: ColumnDef<UserRow>[] = [
-  // Checkbox select
+/* ============================================================
+   TABLE COLUMNS
+   ============================================================ */
+export const columns = (
+  handleDeleteUser: (id: string) => void
+): ColumnDef<UserRow>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -65,19 +74,15 @@ export const columns: ColumnDef<UserRow>[] = [
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
+        onCheckedChange={(v) => table.toggleAllPageRowsSelected(!!v)}
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        onCheckedChange={(v) => row.toggleSelected(!!v)}
       />
     ),
-    enableSorting: false,
-    enableHiding: false,
   },
 
   // FULL NAME
@@ -86,9 +91,7 @@ export const columns: ColumnDef<UserRow>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() =>
-          column.toggleSorting(column.getIsSorted() === "asc")
-        }
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Name <ArrowUpDown />
       </Button>
@@ -104,9 +107,7 @@ export const columns: ColumnDef<UserRow>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() =>
-          column.toggleSorting(column.getIsSorted() === "asc")
-        }
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Email <ArrowUpDown />
       </Button>
@@ -114,15 +115,13 @@ export const columns: ColumnDef<UserRow>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
 
-  // ROLE → Admin/User
+  // ROLE
   {
     accessorKey: "role",
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() =>
-          column.toggleSorting(column.getIsSorted() === "asc")
-        }
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Role <ArrowUpDown />
       </Button>
@@ -137,27 +136,24 @@ export const columns: ColumnDef<UserRow>[] = [
     },
   },
 
-  // STATUS → Premium / Free
+  // STATUS
   {
     id: "status",
     accessorFn: (row) => (row.isPremium ? "Premium" : "Free"),
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() =>
-          column.toggleSorting(column.getIsSorted() === "asc")
-        }
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Status <ArrowUpDown />
       </Button>
     ),
     cell: ({ getValue }) => {
       const v = String(getValue());
-      const isPremium = v === "Premium";
       return (
         <span
           className={`px-2 py-1 text-xs font-medium rounded ${
-            isPremium
+            v === "Premium"
               ? "bg-yellow-500/20 text-yellow-400"
               : "bg-slate-700/30 text-slate-400"
           }`}
@@ -168,7 +164,7 @@ export const columns: ColumnDef<UserRow>[] = [
     },
   },
 
-  // ACTIVITY Count
+  // ACTIVITY COUNT
   {
     id: "activity",
     accessorFn: (row) => {
@@ -181,9 +177,7 @@ export const columns: ColumnDef<UserRow>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        onClick={() =>
-          column.toggleSorting(column.getIsSorted() === "asc")
-        }
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Activity <ArrowUpDown />
       </Button>
@@ -193,12 +187,12 @@ export const columns: ColumnDef<UserRow>[] = [
     ),
   },
 
-  // DROPDOWN ACTIONS
+  // ACTIONS
   {
     id: "actions",
-    enableHiding: false,
     cell: ({ row }) => {
       const user = row.original;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -206,17 +200,22 @@ export const columns: ColumnDef<UserRow>[] = [
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
+            {/* SEE DETAIL */}
             <DropdownMenuItem asChild>
-              <Link href={`/member/${user.id}`}>See detail</Link>
+              <Link href={`/user/${user.id}`}>See detail</Link>
             </DropdownMenuItem>
 
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-rose-600">
+
+            {/* DELETE */}
+            <DropdownMenuItem
+              className="text-rose-600"
+              onClick={() => handleDeleteUser(user.id)}
+            >
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -226,19 +225,24 @@ export const columns: ColumnDef<UserRow>[] = [
   },
 ];
 
-/** ===== Reusable Tabel Komponen ===== */
+/* ============================================================
+   DATATABLE COMPONENT
+   ============================================================ */
+
 type UserTableProps = {
   variant?: "full" | "compact";
   limit?: number;
   params?: Record<string, any>;
+  filterRole?: "User" | "Admin" | "All";
 };
 
-/** ===== Component ===== */
 export function DataTableDemo({
   variant = "full",
   limit = 5,
   params,
+  filterRole = "All",
 }: UserTableProps) {
+  /* SETUP TOKEN */
   React.useEffect(() => {
     const token =
       typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
@@ -261,12 +265,35 @@ export function DataTableDemo({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  /** === Fetch Users === */
+  /* ============================================================
+     DELETE USER
+     ============================================================ */
+
+  const handleDeleteUser = async (id: string) => {
+    const confirmDelete = confirm("Yakin ingin menghapus user ini?");
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`${API_USERS}/${id}`);
+
+      toast.success("User berhasil dihapus!");
+
+      fetchUsers(page);
+    } catch (e) {
+      console.error(e);
+      toast.error("Gagal menghapus user.");
+    }
+  };
+
+  /* ============================================================
+     FETCH USERS
+     ============================================================ */
   const fetchUsers = React.useCallback(
     async (targetPage: number) => {
       try {
         setLoading(true);
-        const query: Record<string, any> = {
+
+        const query: any = {
           page: targetPage,
           ...(params || {}),
         };
@@ -281,7 +308,7 @@ export function DataTableDemo({
         const payload = res.data?.data;
         let users = payload?.users ?? [];
 
-        // Normalisasi sesuai Type
+        // NORMALISASI
         users = users.map((u: any) => ({
           id: u.id,
           fullName: u.fullName,
@@ -294,10 +321,22 @@ export function DataTableDemo({
           profilePicture: u.profilePicture,
           role: u.role,
           activity_user: u.activity_user,
+
+          createdAt: u.createdAt,
         })) as UserRow[];
 
+        // FILTER ROLE
+        if (filterRole !== "All") {
+          users = users.filter((u: { role: string }) => u.role === filterRole);
+        }
+
+        // SORT BY CREATED DATE (DESC)
+        users = [...users].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+
         if (variant === "compact") {
-          users = [...users].sort((a, b) => (b.id > a.id ? 1 : -1));
           if (limit) users = users.slice(0, limit);
           setRows(users);
         } else {
@@ -306,24 +345,26 @@ export function DataTableDemo({
           setPage(payload?.pagination?.currentPage ?? targetPage);
           setLastPage(payload?.pagination?.lastPage ?? 1);
         }
-      } catch (err) {
-        console.error("Failed to fetch users:", err);
+      } catch (e) {
+        console.error("Failed to fetch users:", e);
         setRows([]);
       } finally {
         setLoading(false);
       }
     },
-    [variant, limit, params]
+    [variant, limit, params, filterRole]
   );
 
   React.useEffect(() => {
     fetchUsers(1);
   }, [fetchUsers]);
 
-  /** React Table Config */
+  /* ============================================================
+     REACT TABLE
+     ============================================================ */
   const table = useReactTable({
     data: rows,
-    columns,
+    columns: columns(handleDeleteUser), // ⬅ inject delete handler
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -344,14 +385,14 @@ export function DataTableDemo({
 
   return (
     <div className="w-full">
-      {/* Toolbar untuk FULL */}
+      {/* Toolbar FULL */}
       {variant === "full" && (
         <div className="mb-4 flex items-center">
           <Input
             placeholder="Filter emails..."
             value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
+            onChange={(e) =>
+              table.getColumn("email")?.setFilterValue(e.target.value)
             }
             className="max-w-sm"
           />
@@ -366,17 +407,14 @@ export function DataTableDemo({
             <DropdownMenuContent align="end">
               {table
                 .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => (
+                .filter((col) => col.getCanHide())
+                .map((col) => (
                   <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
+                    key={col.id}
+                    checked={col.getIsVisible()}
+                    onCheckedChange={(v) => col.toggleVisibility(!!v)}
                   >
-                    {column.id}
+                    {col.id}
                   </DropdownMenuCheckboxItem>
                 ))}
             </DropdownMenuContent>
@@ -384,7 +422,7 @@ export function DataTableDemo({
         </div>
       )}
 
-      {/* Table */}
+      {/* TABLE */}
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -407,7 +445,7 @@ export function DataTableDemo({
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={10} className="h-24 text-center">
                   Loading...
                 </TableCell>
               </TableRow>
@@ -419,14 +457,17 @@ export function DataTableDemo({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={10} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -435,12 +476,12 @@ export function DataTableDemo({
         </Table>
       </div>
 
-      {/* Pagination (FULL) */}
+      {/* PAGINATION */}
       {variant === "full" && (
         <div className="flex items-center justify-end space-x-2 py-4">
           <div className="flex-1 text-sm text-muted-foreground">
             {table.getFilteredSelectedRowModel().rows.length} selected.{" "}
-            <span className="ml-2">
+            <span>
               Page {page} of {lastPage} • Total {total}
             </span>
           </div>
@@ -454,6 +495,7 @@ export function DataTableDemo({
             >
               Previous
             </Button>
+
             <Button
               variant="outline"
               size="sm"

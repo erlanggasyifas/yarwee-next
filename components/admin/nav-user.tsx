@@ -8,7 +8,7 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
-  Sparkles,
+  Settings,
 } from "lucide-react";
 import * as React from "react";
 
@@ -151,25 +151,12 @@ export function NavUser({ user: propUser }: { user?: PropUser }) {
 
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+                <Settings />
+                Setting
               </DropdownMenuItem>
             </DropdownMenuGroup>
 

@@ -2,6 +2,7 @@ import {
   NewestMember,
   NewestActivity,
   SummaryCards,
+  RevenueSummaryCards
 } from "@/components/admin/content/dashboard-content";
 
 // Tidak perlu import AppLayout
@@ -11,6 +12,9 @@ export default function DashboardPage() {
     <div className="flex flex-col gap-6">
       <div>
         <SummaryCards />
+      </div>
+      <div>
+        <RevenueSummaryCards />
       </div>
       <div>
         <NewestActivity />

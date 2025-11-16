@@ -225,7 +225,7 @@ export default function MemberDetailPage({
 
   // UI
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* ================= CARD 1 - DETAIL USER ================= */}
       <Card>
         <CardHeader>
